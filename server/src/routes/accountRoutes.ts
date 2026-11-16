@@ -16,11 +16,15 @@ import {
   updateProfile,
 } from "../controllers/accountController";
 import { protect } from "../middleware/auth";
+import { getDashboard } from "../controllers/adminDashboardController";
 
 const router = Router();
 
 // router.use(protect) puts protect in front of EVERY route below it, so we don't repeat it 9 times
 router.use(protect);
+
+// Dashboard (STEP 27)
+router.get("/dashboard", getDashboard);
 
 router.patch("/profile", updateProfile);
 router.patch("/password", changePassword);
