@@ -11,6 +11,8 @@ import { products } from "./products";
 import { connectDB } from "../config/database";
 import { User } from "../models/User";
 import { users } from "./users";
+import { PromoCode } from "../models/PromoCode";
+import { promoCodes } from "./promoCodes";
 
 // STEP 12: The seed command
 // seedDatabase() does the work and is exported, so the demo panel can reuse it.
@@ -19,6 +21,7 @@ import { users } from "./users";
 export const seedDatabase = async () => {
   // 1. Empty the collection (both at the same with promise.all)
   await Promise.all([
+    PromoCode.deleteMany({}),
     Category.deleteMany({}),
     Product.deleteMany({}),
     User.deleteMany({}),
@@ -83,8 +86,12 @@ export const seedDatabase = async () => {
   // pre("save") hook, which hashes the passwords. insertMany would store them as plain text!
   const savedUsers = await User.create(demoUsers());
 
-  // 7. A summary for whoever ran the seed
+  // 7. Save the promo codes (insertMany is fine here: promo codes have no save hooks)
+  const savedPromoCodes = await PromoCode.insertMany(promoCodes);
+
+  // 8. A summary for whoever ran the seed
   return {
+    promoCodes: savedPromoCodes.length,
     categories: savedCategories.length,
     products: savedProducts.length,
     users: savedUsers.length,
@@ -102,7 +109,7 @@ const runSeed = async () => {
     const result = await seedDatabase();
 
     console.log(
-      `Seeded ${result.categories} categories and ${result.products} products`,
+      `Seeded ${result.categories} categories, ${result.products} products, ${result.users} users and ${result.promoCodes} promo codes`,
     );
 
     if (result.withoutPhotos.length > 0) {
