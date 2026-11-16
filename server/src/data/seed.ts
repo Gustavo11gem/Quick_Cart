@@ -15,6 +15,7 @@ import { PromoCode } from "../models/PromoCode";
 import { promoCodes } from "./promoCodes";
 import { Order } from "../models/Order";
 import { Counter } from "../models/Counter";
+import { Review } from "../models/Review";
 
 // STEP 12: The seed command
 // seedDatabase() does the work and is exported, so the demo panel can reuse it.
@@ -25,6 +26,7 @@ export const seedDatabase = async () => {
   await Promise.all([
     Order.deleteMany({}),
     Counter.deleteMany({}), // so the next order is #QC-1042 again
+    Review.deleteMany({}),
     PromoCode.deleteMany({}),
     Category.deleteMany({}),
     Product.deleteMany({}),
