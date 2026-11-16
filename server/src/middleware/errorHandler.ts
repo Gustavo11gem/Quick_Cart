@@ -1,9 +1,8 @@
-// errorHandler.ts
 // The last middleware: turns ANY error thrown in a route into a JSON reply with the
 // right status code, so the server never crashes and the website always gets {message: "..."}
 
 import { NextFunction, Request, Response } from "express";
-import { AppError } from "../utils/appError";
+import { AppError } from "../utils/AppError";
 import mongoose from "mongoose";
 
 // STEP 14: Handle unknown URLs and errors

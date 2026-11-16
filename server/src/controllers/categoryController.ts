@@ -9,7 +9,7 @@ import { Request, Response } from "express";
 import { Types } from "mongoose";
 import { Category } from "../models/Category";
 import { liveProducts, Product } from "../models/Product";
-import { AppError } from "../utils/appError";
+import { AppError } from "../utils/AppError";
 
 // How many products shoppers can see in each category: { "665f...": 15, "6660...": 6, ... }
 // One "aggregate" query counts them all at once, instead of one query per category.

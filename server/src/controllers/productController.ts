@@ -10,7 +10,7 @@ import { Request, Response } from "express";
 import { SortOrder, Types } from "mongoose";
 import { Category } from "../models/Category";
 import { liveProducts, Product } from "../models/Product";
-import { AppError } from "../utils/appError";
+import { AppError } from "../utils/AppError";
 import { escapeRegex } from "../utils/escapeRegex";
 
 // The fields a product card needs. Leaving out the rest (description, specs...) keeps the list fast and small.
