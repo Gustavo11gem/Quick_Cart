@@ -9,6 +9,7 @@ import promoRoutes from "./promoRoutes";
 import orderRoutes from "./orderRoutes";
 import reviewRoutes from "./reviewRoutes";
 import newsletterRoutes from "./newsletterRoutes";
+import adminRoutes from "./adminRoutes";
 
 // STEP 5: Join the routes and add a health check
 // One router joins all the route files. app.ts mounts it at /api, so a route like e.g "/products" becomes /api/products
@@ -16,6 +17,7 @@ import newsletterRoutes from "./newsletterRoutes";
 const router = Router();
 
 // GET /api/health: a quick check that the API  is running
+router.use("/admin", adminRoutes); // /api/admin... (admins only)
 router.use("/newsletter", newsletterRoutes); // /api/newsletter...
 router.use("/orders", orderRoutes); // /api/orders...
 router.use("/reviews", reviewRoutes); // /api/reviews...

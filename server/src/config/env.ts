@@ -4,6 +4,15 @@
 import dotenv from "dotenv";
 dotenv.config({ quiet: true });
 
+const rawBrevoListId = process.env.BREVO_LIST_ID?.trim();
+
+const brevoListId =
+  rawBrevoListId &&
+  Number.isInteger(Number(rawBrevoListId)) &&
+  Number(rawBrevoListId) > 0
+    ? Number(rawBrevoListId)
+    : undefined;
+
 //=== STEP 1: read the settings from .env
 // All settings (port, database adresss, JWT secret... )are raed from .env here, once, so the rest of the code usesenv.port, env.monogoUri And so on
 
@@ -32,6 +41,7 @@ export const env = {
 
   // Brevo sends the emails (see utils/sendEmail.ts). Empty = emails are printed in the terminal instead
   brevoApiKey: process.env.BREVO_API_KEY || "",
-  emailFrom: process.env.EMAIL_FROM || "", // must be a sender you verified in Brevo
+  brevoListId,
+  emailFrom: process.env.EMAIL_FROM || "",
   emailFromName: process.env.EMAIL_FROM_NAME || "QuickCart",
 };
