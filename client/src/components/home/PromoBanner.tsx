@@ -5,7 +5,7 @@
 
 import { MdArrowForward, MdOutlineCampaign } from "react-icons/md";
 import { Link } from "react-router-dom";
-import heroImg from "../../assets/images/Curated lifestyle essentials.png";
+import heroImg from "../../assets/images/Right Visual Feature/Curated lifestyle essentials.png";
 import { useToast } from "../../context/ToastContext";
 
 const CODE = "QUICK25";

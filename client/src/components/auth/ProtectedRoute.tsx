@@ -1,4 +1,3 @@
-// ProtectedRoute.tsx client/src/components/auth/ProtectedRoute.tsx
 // Wraps the routes that need a login in App.tsx:
 //   <Route element={<ProtectedRoute />}>            checkout, account...  -> must be logged in
 //   <Route element={<ProtectedRoute adminOnly />}>  /admin...             -> must be an admin
