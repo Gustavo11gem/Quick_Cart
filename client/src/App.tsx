@@ -30,6 +30,7 @@ import AddressesPage from "./pages/account/AddressesPage";
 import SavedItemsPage from "./pages/account/SavedItemsPage";
 import AccountSettingsPage from "./pages/account/AccountSettingsPage";
 import OrderDetailsPage from "./pages/account/OrderDetailsPage";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
             <Route>
               <Route path="/verify-email" element={<VerifyEmailPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
+              <Route element={<ProtectedRoute />}></Route>
               <Route
                 path="/order-confirmation/:orderId"
                 element={<OrderConfirmationPage />}
@@ -100,6 +102,7 @@ function App() {
               <Route path="customers" element={<AdminCustomersPage />} />
               <Route path="categories" element={<AdminCategoriesPage />} />
               <Route path="setting" element={<AdminSettingsPage />} />
+              <Route element={<ProtectedRoute />}></Route>
 
               {/* Any other admin address shows the 404 page inside the admin layout */}
               <Route path="*" element={<NotFoundPage />} />
