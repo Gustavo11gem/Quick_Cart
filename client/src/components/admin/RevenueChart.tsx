@@ -11,10 +11,9 @@ import {
   LineElement,
   PointElement,
   Tooltip,
-  type ChartConfiguration,
   type ScriptableContext,
 } from "chart.js";
-import { useEffect, useRef } from "react";
+import { Line } from "react-chartjs-2";
 import type { DashboardResponse } from "../../types/admin";
 import { naira } from "../../utils/format";
 
@@ -42,7 +41,6 @@ const shortNaira = (value: number) =>
       : `₦${value}`;
 
 const RevenueChart = ({ chart }: { chart: DashboardResponse["chart"] }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const average =
     chart.length > 0
       ? chart.reduce((sum, point) => sum + point.sales, 0) / chart.length
@@ -123,27 +121,13 @@ const RevenueChart = ({ chart }: { chart: DashboardResponse["chart"] }) => {
     },
   };
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const configuration: ChartConfiguration<"line"> = {
-      type: "line",
-      data,
-      options,
-    };
-    const revenueChart = new ChartJS(canvas, configuration);
-
-    return () => revenueChart.destroy();
-  }, [chart, average]);
-
   return (
     <div
       className="h-80"
       role="img"
       aria-label={`Sales chart, ${chart.length} points. Period average ${naira(Math.round(average))}.`}
     >
-      <canvas ref={canvasRef} />
+      <Line data={data} options={options} />
     </div>
   );
 };
