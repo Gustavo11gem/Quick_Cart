@@ -48,7 +48,7 @@ const FeaturedProducts = () => {
             <li
               key={index}
               aria-hidden="true"
-              className="aspect-[3/4] animate-pulse rounded-3xl bg-surface shadow-card"
+              className="aspect-3/4 animate-pulse rounded-3xl bg-surface shadow-card"
             />
           ))}
         </ul>
