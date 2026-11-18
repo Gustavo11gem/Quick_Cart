@@ -1,83 +1,77 @@
-// api.ts client/src/utils/api.ts
-// The ONE function every page uses to talk to the server:
-//   const { categories } = await api<CategoriesResponse>("/categories");
-//   await api("/auth/login", { method: "POST", body: { email, password } });
-// It adds the server address, sends JSON, adds the login token, and turns the server's
-// { "message": "..." } errors into a real JavaScript error you can show on the page.
+const API_BASE_URL = (import.meta.env.VITE_API_URL || "/api").replace(
+  /\/$/,
+  "",
+);
 
-// STEP 30 (part 2): Talk to the server
+export const TOKEN_KEY = "quickcart-token";
 
-// "http://localhost:5000/api" while developing (from client/.env), your real API address once it's online
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000/api";
+type ApiOptions = {
+  method?: string;
+  body?: unknown;
+  signal?: AbortSignal;
+};
 
-// Where the login token is kept in the browser (STEP 31 saves it here when you log in)
-export const TOKEN_KEY = "quickcart_token";
+type ApiErrorBody = {
+  message?: string;
+};
 
-// An error from the server, with its status code, e.g. new ApiError(404, "Product not found")
 export class ApiError extends Error {
-  status: number; // 0 = the server couldn't be reached at all
+  readonly status: number;
 
-  constructor(status: number, message: string) {
+  constructor(message: string, status: number) {
     super(message);
+    this.name = "ApiError";
     this.status = status;
   }
 }
 
-type ApiOptions = {
-  method?: "GET" | "POST" | "PATCH" | "DELETE";
-  body?: unknown; // an object (sent as JSON) or FormData (photo uploads, STEP 46)
-  signal?: AbortSignal; // lets a page cancel a request it no longer needs (see useApi.ts)
-};
+const isApiErrorBody = (value: unknown): value is ApiErrorBody =>
+  typeof value === "object" &&
+  value !== null &&
+  "message" in value &&
+  (typeof value.message === "string" || value.message === undefined);
 
-export const api = async <T>(
+export const api = async <T = void>(
   path: string,
-  { method = "GET", body, signal }: ApiOptions = {},
+  options: ApiOptions = {},
 ): Promise<T> => {
-  const isForm = body instanceof FormData;
-  const headers: Record<string, string> = {};
-
-  // Logged in? Show the token on every request, like the Bearer Token tab in Postman
   const token = localStorage.getItem(TOKEN_KEY);
+  const headers = new Headers();
+
+  if (options.body !== undefined) {
+    headers.set("Content-Type", "application/json");
+  }
   if (token) {
-    headers.Authorization = `Bearer ${token}`;
+    headers.set("Authorization", `Bearer ${token}`);
   }
 
-  // JSON bodies need this header. FormData must NOT have it: the browser writes its own.
-  if (body !== undefined && !isForm) {
-    headers["Content-Type"] = "application/json";
-  }
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: options.method ?? "GET",
+    headers,
+    ...(options.signal ? { signal: options.signal } : {}),
+    ...(options.body !== undefined
+      ? { body: JSON.stringify(options.body) }
+      : {}),
+  });
 
-  let response: Response;
+  let result: unknown;
   try {
-    response = await fetch(API_URL + path, {
-      method,
-      headers,
-      body:
-        body === undefined ? undefined : isForm ? body : JSON.stringify(body),
-      signal,
-    });
-  } catch (error) {
-    // fetch only throws when there's no answer at all: the server is off, or there's no internet.
-    // (A cancelled request is not a real error: let the page ignore it.)
-    if ((error as Error).name === "AbortError") {
-      throw error;
-    }
+    result = await response.json();
+  } catch {
     throw new ApiError(
-      0,
-      "Can't reach QuickCart right now. Check your connection and try again.",
-    );
-  }
-
-  // Every QuickCart reply is JSON. ".catch" covers an empty or broken reply.
-  const data = await response.json().catch(() => ({}));
-
-  // 400, 401, 404, 500...: the server's own message, e.g. "Incorrect email or password."
-  if (!response.ok) {
-    throw new ApiError(
+      response.ok
+        ? "The server returned an invalid response."
+        : `Request failed (${response.status}).`,
       response.status,
-      data.message ?? "Something went wrong. Please try again.",
     );
   }
 
-  return data as T;
+  if (!response.ok) {
+    const message = isApiErrorBody(result)
+      ? result.message || `Request failed (${response.status}).`
+      : `Request failed (${response.status}).`;
+    throw new ApiError(message, response.status);
+  }
+
+  return result as T;
 };

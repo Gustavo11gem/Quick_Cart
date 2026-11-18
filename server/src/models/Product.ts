@@ -143,6 +143,8 @@ export const liveProducts = () => {
   return {
     $or: [
       { status: "published" as const },
+      // Older products may not have a stored status; schema defaults aren't retroactive.
+      { status: { $exists: false } },
       { status: "scheduled" as const, publishAt: { $lte: new Date() } },
     ],
   };

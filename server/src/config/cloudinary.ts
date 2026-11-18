@@ -2,8 +2,6 @@
 // Product photo lives on cloudinary, a service that stores pictures and serve them quickly from anywhere in the world. This file logs in to cloudinary once and has small helpers for photo addresses
 import { v2 as cloudinary } from "cloudinary";
 import { env } from "./env";
-import { resolve } from "node:dns";
-import { error } from "node:console";
 
 // Every product photo is kept in the "quickcart/products" folder:
 
