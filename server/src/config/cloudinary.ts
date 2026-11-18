@@ -114,7 +114,7 @@ export const listProductPhotoId = async (): Promise<string[]> => {
   do {
     const page = await cloudinary.api.resources({
       type: "upload",
-      prefix: `${PHOTO_FOLDER}`,
+      prefix: `${PHOTO_FOLDER}/`,
       max_results: 500,
       next_cursor: nextCursor,
     });
