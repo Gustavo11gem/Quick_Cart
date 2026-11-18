@@ -5,7 +5,6 @@ import App from "./App.tsx";
 import AuthProvider from "./context/AuthProvider";
 import CartProvider from "./context/CartProvider";
 import ToastProvider from "./context/ToastProvider";
-import AddedToCartModal from "./components/product/AddedToCartModal.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -16,6 +15,5 @@ createRoot(document.getElementById("root")!).render(
         </CartProvider>
       </AuthProvider>
     </ToastProvider>
-    <AddedToCartModal />
   </StrictMode>,
 );

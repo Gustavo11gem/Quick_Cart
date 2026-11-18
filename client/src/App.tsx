@@ -31,11 +31,13 @@ import SavedItemsPage from "./pages/account/SavedItemsPage";
 import AccountSettingsPage from "./pages/account/AccountSettingsPage";
 import OrderDetailsPage from "./pages/account/OrderDetailsPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import AddedToCartModal from "./components/product/AddedToCartModal";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <AddedToCartModal />
         <Routes>
           <Route element={<MainLayout />}>
             {/* Everyone can access these pages */}
